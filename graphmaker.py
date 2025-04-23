@@ -47,13 +47,37 @@ class GraphMaker:
             messagebox.showwarning("Input Error", "Please enter edge and label.")
 
     def draw_graph(self):
+        # 1. Build a layout (any layout works)
         pos = nx.spring_layout(self.G)
-        plt.figure(figsize=(6, 4))
-        nx.draw(self.G, pos, with_labels=True, node_size=2000, node_color='lightblue', font_size=16, font_weight='bold', arrowsize=20)
-        labels = nx.get_edge_attributes(self.G, 'label')
-        nx.draw_networkx_edge_labels(self.G, pos, edge_labels=labels, font_size=14)
+
+        # 2. Rescale positions so they all lie in
+        #    [margin , 1-margin] × [margin , 1-margin]
+        margin = 0.15                     # 15 % padding on every side
+        pos = {n: (margin + (1-2*margin)*x,
+                margin + (1-2*margin)*y)
+            for n, (x, y) in pos.items()}
+
+        # 3. Draw
+        fig, ax = plt.subplots(figsize=(6, 4))
+        ax.set_axis_off()
+        nx.draw_networkx(
+            self.G, pos, ax=ax,
+            with_labels=True,
+            node_size=2000,
+            node_color="lightblue",
+            font_size=16,
+            font_weight="bold",
+            arrowsize=20,
+        )
+        nx.draw_networkx_edge_labels(
+            self.G, pos, ax=ax,
+            edge_labels=nx.get_edge_attributes(self.G, "label"),
+            font_size=14,
+        )
         plt.title("DFA/NFA Directed Graph")
+        plt.tight_layout()          # keep the figure’s own padding tidy
         plt.show()
+
 
 if __name__ == "__main__":
     root = tk.Tk()
