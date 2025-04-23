@@ -3,7 +3,7 @@ from tkinter import messagebox
 import networkx as nx
 import matplotlib.pyplot as plt
 
-class DFAGraphMaker:
+class GraphMaker:
     def __init__(self, root):
         self.root = root
         self.root.title("DFA/NFA Graph Maker")
@@ -57,5 +57,5 @@ class DFAGraphMaker:
 
 if __name__ == "__main__":
     root = tk.Tk()
-    app = DFAGraphMaker(root)
+    app = GraphMaker(root)
     root.mainloop()
